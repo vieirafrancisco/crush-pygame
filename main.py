@@ -1,7 +1,20 @@
+import random
+
 import pygame
 
 WIDTH = 512
 HEIGHT = 640
+
+COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+
+
+class Block(pygame.sprite.Sprite):
+    def __init__(self, color):
+        super().__init__()
+        self.color = color
+        self.image = pygame.Surface((32, 32))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
 
 
 class Slot(pygame.sprite.Sprite):
@@ -11,16 +24,22 @@ class Slot(pygame.sprite.Sprite):
         self.image.fill((100, 100, 100))
         pygame.draw.rect(self.image, (255, 255, 255), (0, 0, 64, 64), width=1)
         self.rect = self.image.get_rect()
+        self.block = None
+
+    def add_block(self, color):
+        self.block = Block(color)
+        self.image.blit(self.block.image, (16, 16))
 
 
 class Map(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
-        self.slots = [3, 5, 7, 9, 7, 5, 3, 5]
+        self.slots = [10, 5, 7, 9, 7, 5, 3, 10]
 
         for x, n_rows in enumerate(self.slots):
             for y in range(n_rows):
                 slot = Slot()
+                slot.add_block(random.choice(COLORS))
                 slot_pos = (0, 0)
 
                 if y < n_rows // 2:
@@ -59,11 +78,8 @@ class Game:
             self.running = False
 
     def render(self):
-        # for y in range(0, HEIGHT, 64):
-        #     pygame.draw.line(self.screen, (255, 0, 0), (0, y), (WIDTH, y))
-
-        for x in range(0, WIDTH, 64):
-            pygame.draw.line(self.screen, (255, 0, 0), (x, 0), (x, HEIGHT))
+        # for x in range(0, WIDTH, 64):
+        #     pygame.draw.line(self.screen, (255, 0, 0), (x, 0), (x, HEIGHT))
 
         self.map.draw(self.screen)
 
