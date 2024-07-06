@@ -1,6 +1,6 @@
 import pygame
 
-WIDTH = 480
+WIDTH = 512
 HEIGHT = 640
 
 
@@ -16,25 +16,23 @@ class Slot(pygame.sprite.Sprite):
 class Map(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
-        self.slots = [3, 5, 7, 9, 7, 5, 3]
+        self.slots = [3, 5, 7, 9, 7, 5, 3, 5]
 
         for x, n_rows in enumerate(self.slots):
             for y in range(n_rows):
-                x_gap = x * 5
-
                 slot = Slot()
                 slot_pos = (0, 0)
 
                 if y < n_rows // 2:
                     slot_pos = (
-                        x * 64 + x_gap, HEIGHT // 2 - (y * 64) - 96 - y * 5 - 5
+                        x * 64, HEIGHT // 2 - (y * 64) - 64
                     )
                 elif y == n_rows // 2:
-                    slot_pos = (x * 64 + x_gap, HEIGHT // 2 - 32)
+                    slot_pos = (x * 64, HEIGHT // 2)
                 elif y > n_rows // 2:
                     slot_pos = (
-                        x * 64 + x_gap,
-                        HEIGHT // 2 + (n_rows - y) * 64 - 32 + (n_rows - y) * 5
+                        x * 64,
+                        HEIGHT // 2 + (n_rows - y) * 64
                     )
 
                 slot.rect.topleft = slot_pos
@@ -61,6 +59,12 @@ class Game:
             self.running = False
 
     def render(self):
+        # for y in range(0, HEIGHT, 64):
+        #     pygame.draw.line(self.screen, (255, 0, 0), (0, y), (WIDTH, y))
+
+        for x in range(0, WIDTH, 64):
+            pygame.draw.line(self.screen, (255, 0, 0), (x, 0), (x, HEIGHT))
+
         self.map.draw(self.screen)
 
     def update(self):
